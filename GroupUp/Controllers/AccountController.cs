@@ -11,23 +11,19 @@ namespace GroupUp.Controllers
 {
   [ApiController]
   [Route("[controller]")]
+  [Authorize]
   public class AccountController : ControllerBase
   {
     private readonly AccountService _accountService;
     private readonly MembersService _membersService;
 
-    public AccountController(AccountService accountService)
+    public AccountController(AccountService accountService, MembersService membersService)
     {
       _accountService = accountService;
-    }
-
-    public AccountController(AccountService accountService, MembersService membersService) : this(accountService)
-    {
       _membersService = membersService;
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<ActionResult<Account>> Get()
     {
       try
@@ -42,7 +38,6 @@ namespace GroupUp.Controllers
     }
 
     [HttpGet("groups")]
-    [Authorize]
     public async Task<ActionResult<List<GroupMemberViewModel>>> GetGroups()
     {
       try

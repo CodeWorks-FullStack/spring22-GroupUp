@@ -14,10 +14,12 @@ namespace GroupUp.Controllers
   public class GroupsController : ControllerBase
   {
     private readonly GroupsService _gs;
+    private readonly MembersService _ms;
 
-    public GroupsController(GroupsService gs)
+    public GroupsController(GroupsService gs, MembersService ms)
     {
       _gs = gs;
+      _ms = ms;
     }
 
     [HttpGet]
@@ -34,14 +36,30 @@ namespace GroupUp.Controllers
       }
     }
 
+    // REVIEW HINT HINT WINK WINK NUDGE NUDGE
     [HttpGet("{id}")]
-    public ActionResult<Group> Get(int id)
+    public async Task<ActionResult<Group>> Get(int id)
     {
       try
       {
-        // TODO check for auth
-        Group group = _gs.Get(id);
+        // May not be logged in due to no [Authorize] will return null
+        Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+        Group group = _gs.Get(id, userInfo?.Id);
         return Ok(group);
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
+    [HttpGet("{id}/members")]
+    public ActionResult<List<MemberProfileViewModel>> GetMembers(int id)
+    {
+      try
+      {
+        List<MemberProfileViewModel> members = _ms.GetMembersByGroupId(id);
+        return Ok(members);
       }
       catch (Exception e)
       {

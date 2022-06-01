@@ -58,5 +58,28 @@ namespace GroupUp.Repositories
         return g;
       }, new { id }).ToList();
     }
+
+    internal Member getMembership(int id, string userId)
+    {
+      string sql = @"
+      SELECT * FROM members
+      WHERE groupId = @id AND profileId = @userId
+      ";
+      return _db.QueryFirstOrDefault<Member>(sql, new { id, userId });
+    }
+
+    internal List<MemberProfileViewModel> GetMembersByGroupId(int id)
+    {
+      // Many to many get without populate
+      string sql = @"
+            SELECT
+                a.*,
+                m.id AS memberId
+            FROM members m
+            JOIN accounts a ON m.profileId = a.id
+            WHERE m.groupId = @id
+        ";
+      return _db.Query<MemberProfileViewModel>(sql, new { id }).ToList();
+    }
   }
 }

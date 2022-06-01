@@ -24,12 +24,33 @@ namespace GroupUp.Services
       return groups;
     }
 
-    internal Group Get(int id)
+    private Group Get(int id)
     {
       Group found = _repo.Get(id);
       if (found == null)
       {
         throw new Exception("Group not found");
+      }
+      return found;
+    }
+
+    public Group Get(int id, string userId)
+    {
+      Group found = _repo.Get(id);
+      // if no group
+      if (found == null)
+      {
+        throw new Exception("Group not found");
+      }
+      // if private and not the creator
+      if (found.IsPrivate && found.CreatorId != userId)
+      {
+        Member membership = _membersRepo.getMembership(id, userId);
+        // if not a member
+        if (membership == null)
+        {
+          throw new Exception("You do not have access to this group");
+        }
       }
       return found;
     }

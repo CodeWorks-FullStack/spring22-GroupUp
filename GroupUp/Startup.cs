@@ -40,6 +40,7 @@ namespace GroupUp
       services.AddTransient<GroupsService>();
       services.AddTransient<MembersRepository>();
       services.AddTransient<MembersService>();
+
     }
 
     private void ConfigureCors(IServiceCollection services)

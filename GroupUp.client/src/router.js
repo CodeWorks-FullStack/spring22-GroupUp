@@ -1,4 +1,4 @@
-import { authGuard } from '@bcwdev/auth0provider-client'
+import { authGuard, authSettled } from '@bcwdev/auth0provider-client'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 function loadPage(page) {
@@ -19,7 +19,9 @@ const routes = [
   {
     path: '/groups/:id',
     name: 'Group',
-    component: loadPage('GroupPage')
+    component: loadPage('GroupPage'),
+    // wait to enter until auth is either confirmed or rejected
+    beforeEnter: authSettled
   },
   {
     path: '/account',

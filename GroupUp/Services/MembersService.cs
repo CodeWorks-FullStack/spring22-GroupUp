@@ -44,5 +44,11 @@ namespace GroupUp.Services
       List<GroupMemberViewModel> members = _repo.GetByProfileId(id);
       return members;
     }
+
+    internal List<MemberProfileViewModel> GetMembersByGroupId(int id)
+    {
+      List<MemberProfileViewModel> members = _repo.GetMembersByGroupId(id);
+      return members;
+    }
   }
 }
