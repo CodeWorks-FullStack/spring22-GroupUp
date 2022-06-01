@@ -58,6 +58,7 @@ namespace GroupUp.Controllers
         Profile profile = await HttpContext.GetUserInfoAsync<Profile>();
         group.CreatorId = profile.Id;
         Group newGroup = _gs.Create(group);
+        newGroup.Creator = profile;
         return Created($"/api/groups/{newGroup.Id}", newGroup);
       }
       catch (Exception e)
